@@ -1,0 +1,87 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using TodoList.WebApi.DTOs;
+using TodoList.WebApi.Interfaces;
+using TodoList.WebApi.Models;
+using TodoList.WebApi.Services.Interfaces;
+
+namespace TodoList.WebApi.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class TodoController : ControllerBase
+    {
+        private readonly ITodoService _todoService;
+
+        public TodoController(ITodoService todoService)
+        {
+            _todoService = todoService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ToDo>>> GetAll()
+        {
+            var todos = await _todoService.GetAllTodosAsync();
+            return Ok(todos);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ToDo>> GetById(string id)
+        {
+            var todo = await _todoService.GetTodoByIdAsync(id);
+
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(todo);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ToDo>> Create([FromBody] CreateTodoDto createTodoDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdTodo = await _todoService.CreateTodoAsync(createTodoDto);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = createdTodo.Id },
+                createdTodo);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateTodoDto updateTodoDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _todoService.UpdateTodoAsync(id, updateTodoDto);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _todoService.DeleteTodoAsync(id);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+    }
+}

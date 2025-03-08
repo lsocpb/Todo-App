@@ -20,23 +20,13 @@ namespace TodoList.WebApi.Data
         /// <param name="settings">The MongoDB configuration options.</param>
         public MongoDbContext(IOptions<MongoDbSettings> settings)
         {
-            var mongoClientSettings = MongoClientSettings.FromConnectionString(settings.Value.ConntectionString);
+            var mongoClientSettings = MongoClientSettings.FromConnectionString(settings.Value.ConnectionString);
 
             mongoClientSettings.ServerApi = new ServerApi(ServerApiVersion.V1);
 
             var client = new MongoClient(mongoClientSettings);
             _database = client.GetDatabase(settings.Value.DatabaseName);
             
-            try
-            {
-                var result = client.GetDatabase("admin").RunCommand<BsonDocument>(new BsonDocument("ping", 1));
-                Console.WriteLine("Połączenie z MongoDB zostało ustanowione pomyślnie!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Błąd połączenia z MongoDB: {ex.Message}");
-                throw;
-            }
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using TodoList.WebApi.Data;
 using TodoList.WebApi.Interfaces;
 using TodoList.WebApi.Repositories;
 using TodoList.WebApi.Services;
+using TodoList.WebApi.Services.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
