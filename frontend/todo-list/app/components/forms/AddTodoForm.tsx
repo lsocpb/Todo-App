@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { CreateTodoDto } from "../services/todoService";
-import TextArea from "./ui/TextArea";
+import { CreateTodoDto } from "../../services/todoService";
+import TextArea from "../ui/TextArea/TextArea";
 
 interface AddTodoFormProps {
   onAddTodo: (todo: CreateTodoDto) => Promise<void>;

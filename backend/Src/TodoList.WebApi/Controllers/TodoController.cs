@@ -6,17 +6,28 @@ using TodoList.WebApi.Services.Interfaces;
 
 namespace TodoList.WebApi.Controllers
 {
+    /// <summary>
+    /// Kontroler do obsługi operacji na zadaniach
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class TodoController : ControllerBase
     {
         private readonly ITodoService _todoService;
 
+        /// <summary>
+        /// Konstruktor kontrolera
+        /// </summary>
+        /// <param name="todoService">Serwis do obsługi operacji na zadaniach</param>
         public TodoController(ITodoService todoService)
         {
             _todoService = todoService;
         }
 
+        /// <summary>
+        /// Pobiera wszystkie zadania
+        /// </summary>
+        /// <returns>Lista zadań</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDo>>> GetAll()
         {
@@ -24,6 +35,11 @@ namespace TodoList.WebApi.Controllers
             return Ok(todos);
         }
 
+        /// <summary>
+        /// Pobiera zadanie po identyfikatorze
+        /// </summary>
+        /// <param name="id">Identyfikator zadania</param>
+        /// <returns>Zadanie</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<ToDo>> GetById(string id)
         {
@@ -37,6 +53,11 @@ namespace TodoList.WebApi.Controllers
             return Ok(todo);
         }
 
+        /// <summary>
+        /// Tworzy nowe zadanie
+        /// </summary>
+        /// <param name="createTodoDto">Dane nowego zadania</param>
+        /// <returns>Nowe zadanie</returns>
         [HttpPost]
         public async Task<ActionResult<ToDo>> Create([FromBody] CreateTodoDto createTodoDto)
         {
@@ -53,6 +74,11 @@ namespace TodoList.WebApi.Controllers
                 createdTodo);
         }
 
+        /// <summary>
+        /// Aktualizuje zadanie
+        /// </summary>
+        /// <param name="id">Identyfikator zadania</param>
+        /// <param name="updateTodoDto">Dane do aktualizacji</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateTodoDto updateTodoDto)
         {
@@ -71,6 +97,10 @@ namespace TodoList.WebApi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Usuwa zadanie
+        /// </summary>
+        /// <param name="id">Identyfikator zadania</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {

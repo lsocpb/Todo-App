@@ -6,18 +6,16 @@ using TodoList.WebApi.Configuration;
 namespace TodoList.WebApi.Data
 {
     /// <summary>
-    /// The MongoDbContext class manages the connection to a MongoDB database 
-    /// based on the configuration provided by the MongoDbSettings class.
+    /// Klasa reprezentująca kontekst bazy danych MongoDB
     /// </summary>
     public class MongoDbContext
     {
         private readonly IMongoDatabase _database;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MongoDbContext"/> class 
-        /// and establishes a connection to the MongoDB database using the specified settings.
+        /// Konstruktor inicializujący kontekst bazy danych MongoDB
         /// </summary>
-        /// <param name="settings">The MongoDB configuration options.</param>
+        /// <param name="settings">Opcje</param>
         public MongoDbContext(IOptions<MongoDbSettings> settings)
         {
             var mongoClientSettings = MongoClientSettings.FromConnectionString(settings.Value.ConnectionString);
@@ -30,7 +28,7 @@ namespace TodoList.WebApi.Data
         }
 
         /// <summary>
-        /// Gets a collection from the MongoDB database.
+        /// Pobiera kolekcję z bazy danych
         /// </summary>
         public IMongoCollection<T> GetCollection<T>(string name)
         {

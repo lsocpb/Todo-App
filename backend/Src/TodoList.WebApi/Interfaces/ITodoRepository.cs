@@ -1,7 +1,10 @@
 ﻿using TodoList.WebApi.Models;
 
 namespace TodoList.WebApi.Interfaces
-{
+{   
+    /// <summary>
+    /// Interfejs repozytorium zadan
+    /// </summary>
     public interface ITodoRepository
     {
         Task<IEnumerable<ToDo>> GetAllAsync();

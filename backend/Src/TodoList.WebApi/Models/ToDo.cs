@@ -2,7 +2,10 @@
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace TodoList.WebApi.Models
-{
+{   
+    /// <summary>
+    /// Klasa bazy Mongo reprezentująca zadanie
+    /// </summary>
     public class ToDo
     {
         [BsonId]
