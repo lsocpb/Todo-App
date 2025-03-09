@@ -1,12 +1,23 @@
 "use client";
 import { useState } from "react";
 import { CreateTodoDto } from "../services/todoService";
+import TextArea from "./ui/TextArea";
 
 interface AddTodoFormProps {
   onAddTodo: (todo: CreateTodoDto) => Promise<void>;
   onCancel: () => void;
 }
-
+/**
+ * Komponent formularza do dodawania nowego zadania Todo.
+ *
+ * @component
+ * @param {AddTodoFormProps} props - Właściwości komponentu.
+ * @param {(todo: CreateTodoDto) => Promise<void>} props.onAddTodo - Funkcja obsługująca dodanie nowego zadania Todo.
+ * @param {() => void} props.onCancel - Funkcja obsługująca anulowanie formularza.
+ *
+ * @example
+ * <AddTodoForm onAddTodo={handleAddTodo} onCancel={handleCancel} />
+ */
 export default function AddTodoForm({ onAddTodo, onCancel }: AddTodoFormProps) {
   const [newTodo, setNewTodo] = useState<CreateTodoDto>({
     title: "",
@@ -14,6 +25,11 @@ export default function AddTodoForm({ onAddTodo, onCancel }: AddTodoFormProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  /**
+   * Obsługuje zdarzenie wysłania formularza.
+   * @param {React.FormEvent} e - Obiekt zdarzenia formularza.
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTodo.title.trim()) return;
@@ -24,7 +40,6 @@ export default function AddTodoForm({ onAddTodo, onCancel }: AddTodoFormProps) {
         title: newTodo.title.trim(),
         description: newTodo.description?.trim() || undefined,
       });
-      // Form will be hidden by parent component after successful submission
     } catch (error) {
       console.error("Error in AddTodoForm:", error);
     } finally {
@@ -52,25 +67,17 @@ export default function AddTodoForm({ onAddTodo, onCancel }: AddTodoFormProps) {
           disabled={isSubmitting}
         />
       </div>
-      <div className="mb-3">
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Description (optional)
-        </label>
-        <textarea
-          id="description"
-          value={newTodo.description || ""}
-          onChange={(e) =>
-            setNewTodo({ ...newTodo, description: e.target.value })
-          }
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Add more details..."
-          rows={2}
-          disabled={isSubmitting}
-        />
-      </div>
+
+      <TextArea
+        id="description"
+        label="Description (optional)"
+        value={newTodo.description || ""}
+        onChange={(value) => setNewTodo({ ...newTodo, description: value })}
+        placeholder="Add more details..."
+        rows={2}
+        disabled={isSubmitting}
+      />
+
       <div className="flex justify-end space-x-2">
         <button
           type="button"

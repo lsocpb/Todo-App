@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { UpdateTodoDto, Todo } from "../services/todoService";
+import { UpdateTodoDto, Todo } from "../../services/todoService";
 
 interface EditTodoFormProps {
   todo: Todo;
@@ -8,6 +8,22 @@ interface EditTodoFormProps {
   onCancel: () => void;
 }
 
+/**
+ * Komponent formularza do edytowania istniejącego zadania Todo.
+ *
+ * @component
+ * @param {EditTodoFormProps} props - Właściwości komponentu.
+ * @param {Todo} props.todo - Zadanie Todo, które ma zostać edytowane.
+ * @param {(id: string, updateData: UpdateTodoDto) => Promise<void>} props.onUpdate - Funkcja obsługująca aktualizację zadania Todo.
+ * @param {() => void} props.onCancel - Funkcja obsługująca anulowanie formularza i ukrycie go.
+ *
+ * @example
+ * <EditTodoForm
+ *   todo={todoData}
+ *   onUpdate={handleUpdateTodo}
+ *   onCancel={handleCancel}
+ * />
+ */
 export default function EditTodoForm({
   todo,
   onUpdate,
@@ -17,6 +33,12 @@ export default function EditTodoForm({
   const [description, setDescription] = useState(todo.description || "");
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * Obsługuje zdarzenie wysłania formularza.
+   * @param {React.FormEvent}
+   * @returns {Promise<void>}
+   * @throws {Error} Błąd podczas aktualizacji zadania.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
@@ -27,7 +49,7 @@ export default function EditTodoForm({
         title: title.trim(),
         description: description.trim() || undefined,
       });
-      onCancel(); // Hide form after successful update
+      onCancel();
     } catch (error) {
       console.error("Error updating todo:", error);
     } finally {

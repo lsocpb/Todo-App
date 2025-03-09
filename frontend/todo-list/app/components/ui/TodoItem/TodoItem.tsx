@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { Todo, UpdateTodoDto } from "../services/todoService";
-import EditTodoForm from "./EditTodoForm";
+import { Todo, UpdateTodoDto } from "../../../services/todoService";
+import EditTodoForm from "../../forms/EditTodoForm";
 
 interface TodoItemProps {
   todo: Todo;
@@ -9,10 +9,31 @@ interface TodoItemProps {
   onDelete: (id: string) => Promise<void>;
 }
 
+/**
+ * Komponent reprezentujący pojedyncze zadanie Todo, umożliwiający edytowanie, usuwanie oraz oznaczanie zadania jako zakończone.
+ *
+ * @component
+ * @param {TodoItemProps} props - Właściwości komponentu.
+ * @param {Todo} props.todo - Zadanie Todo, które ma być wyświetlone.
+ * @param {(id: string, updateData: UpdateTodoDto) => Promise<void>} props.onUpdate - Funkcja obsługująca aktualizację zadania Todo.
+ * @param {(id: string) => Promise<void>} props.onDelete - Funkcja obsługująca usuwanie zadania Todo.
+ *
+ * @example
+ * <TodoItem
+ *   todo={todoData}
+ *   onUpdate={handleUpdateTodo}
+ *   onDelete={handleDeleteTodo}
+ * />
+ */
 export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * Obsługuje zmianę statusu zakończenia zadania.
+   * @returns {Promise<void>}
+   * @throws {Error} Błąd podczas zmiany statusu zakończenia zadania.
+   */
   const toggleComplete = async () => {
     setIsLoading(true);
     try {
@@ -24,6 +45,11 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
     }
   };
 
+  /**
+   * Obsługuje usunięcie zadania.
+   * @returns {Promise<void>}
+   * @throws {Error} Błąd podczas usuwania zadania.
+   */
   const handleDelete = async () => {
     if (confirm("Are you sure you want to delete this todo?")) {
       setIsLoading(true);

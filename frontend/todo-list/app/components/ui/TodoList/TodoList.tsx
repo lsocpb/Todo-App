@@ -1,13 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import TodoItem from "./TodoItem";
-import AddTodoForm from "./AddTodoForm";
+import TodoItem from "../TodoItem/TodoItem";
+import AddTodoForm from "../../forms/AddTodoForm";
 import TodoService, {
   Todo,
   CreateTodoDto,
   UpdateTodoDto,
-} from "../services/todoService";
+} from "../../../services/todoService";
 
+/**
+ * Komponent listy zadań Todo, umożliwiający wyświetlanie, dodawanie, edytowanie oraz usuwanie zadań.
+ */
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,6 +22,11 @@ export default function TodoList() {
     loadTodos();
   }, []);
 
+  /**
+   * Pobiera wszystkie zadania Todo.
+   * @returns {Promise<void>}
+   * @throws {Error} Błąd podczas pobierania zadań.
+   */
   async function loadTodos() {
     setIsLoading(true);
     setError(null);
@@ -33,6 +41,12 @@ export default function TodoList() {
     }
   }
 
+  /**
+   * Obsługuje dodanie nowego zadania Todo.
+   * @param {CreateTodoDto}
+   * @returns {Promise<void>}
+   * @throws {Error} Błąd podczas tworzenia zadania.
+   */
   const handleAddTodo = async (todo: CreateTodoDto) => {
     try {
       const createdTodo = await TodoService.createTodo(todo);
@@ -46,6 +60,13 @@ export default function TodoList() {
     }
   };
 
+  /**
+   * Obsługuje aktualizację istniejącego zadania Todo.
+   * @param {string} id - Identyfikator zadania do aktualizacji.
+   * @param {UpdateTodoDto} updateData - Dane do aktualizacji zadania.
+   * @returns {Promise<void>}
+   * @throws {Error} Błąd podczas aktualizacji zadania.
+   */
   const handleUpdateTodo = async (id: string, updateData: UpdateTodoDto) => {
     try {
       await TodoService.updateTodo(id, updateData);
@@ -62,6 +83,12 @@ export default function TodoList() {
     }
   };
 
+  /**
+   * Obsługuje usunięcie zadania Todo.
+   * @param {string} id - Identyfikator zadania do usunięcia.
+   * @returns {Promise<void>}
+   * @throws {Error} Błąd podczas usuwania zadania.
+   */
   const handleDeleteTodo = async (id: string) => {
     try {
       await TodoService.deleteTodo(id);

@@ -1,4 +1,4 @@
-import TodoList from "./components/TodoList";
+import TodoList from "./components/ui/TodoList/TodoList";
 
 export default function Home() {
   return (
@@ -7,7 +7,6 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
           TODO List
         </h1>
-
         <TodoList />
       </main>
     </div>
