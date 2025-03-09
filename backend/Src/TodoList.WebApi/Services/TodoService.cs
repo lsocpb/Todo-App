@@ -47,19 +47,29 @@ namespace TodoList.WebApi.Services
                 return false;
             }
 
-            existingTodo.Title = updateTodoDto.Title;
-            existingTodo.Description = updateTodoDto.Description;
-
-            if (!existingTodo.IsCompleted && updateTodoDto.IsCompleted)
+            if (updateTodoDto.Title != null)
             {
-                existingTodo.CompletedAt = DateTime.UtcNow;
-            }
-            else if (existingTodo.IsCompleted && !updateTodoDto.IsCompleted)
-            {
-                existingTodo.CompletedAt = null;
+                existingTodo.Title = updateTodoDto.Title;
             }
 
-            existingTodo.IsCompleted = updateTodoDto.IsCompleted;
+            if (updateTodoDto.Description != null)
+            {
+                existingTodo.Description = updateTodoDto.Description;
+            }
+
+            if (updateTodoDto.IsCompleted.HasValue)
+            {
+                if (!existingTodo.IsCompleted && updateTodoDto.IsCompleted.Value)
+                {
+                    existingTodo.CompletedAt = DateTime.UtcNow;
+                }
+                else if (existingTodo.IsCompleted && !updateTodoDto.IsCompleted.Value)
+                {
+                    existingTodo.CompletedAt = null;
+                }
+
+                existingTodo.IsCompleted = updateTodoDto.IsCompleted.Value;
+            }
 
             return await _todoRepository.UpdateAsync(id, existingTodo);
         }
