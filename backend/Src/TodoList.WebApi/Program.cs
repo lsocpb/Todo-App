@@ -5,48 +5,56 @@ using TodoList.WebApi.Interfaces;
 using TodoList.WebApi.Repositories;
 using TodoList.WebApi.Services;
 using TodoList.WebApi.Services.Interfaces;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
-
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
-
-builder.Services.AddSingleton<MongoDbContext>();
-builder.Services.AddSingleton<ITodoRepository, MongoDbTodoRepository>();
-builder.Services.AddScoped<ITodoService, TodoService>();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+namespace TodoList.WebApi
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoList API", Version = "v1" });
-});
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReactApp", builder =>
+    public class Program
     {
-        builder.WithOrigins(
-                "http://localhost:3000",
-                "http://frontend:3000")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
-});
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+            builder.Services.AddControllers();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TodoList API v1"));
+            builder.Services.Configure<MongoDbSettings>(
+                builder.Configuration.GetSection("MongoDbSettings"));
+
+            builder.Services.AddSingleton<MongoDbContext>();
+            builder.Services.AddSingleton<ITodoRepository, MongoDbTodoRepository>();
+            builder.Services.AddScoped<ITodoService, TodoService>();
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoList API", Version = "v1" });
+            });
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", policyBuilder =>
+                {
+                    policyBuilder.WithOrigins(
+                            "http://localhost:3000",
+                            "http://frontend:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
+            var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TodoList API v1"));
+            }
+
+            app.UseCors("AllowReactApp");
+            app.UseHttpsRedirection();
+            app.UseAuthorization();
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
 }
-
-app.UseCors("AllowReactApp");
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
