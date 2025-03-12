@@ -1,28 +1,80 @@
 # TodoList Assignment  
 
-Build a **TODO list application** with a **React frontend** and a **C# backend API**.  
+**TODO list application** with a **React frontend** and a **C# backend API**.  
 
-Write an **integration test** using xUnit on the backend to verify that all **CRUD (Create, Read, Update, Delete)** operations work correctly.  
+## Database Configuration
 
-## Instructions  
+This project uses MongoDB. To set up the database connection:
 
-1. **Clone this repository**, make the necessary updates, and push your changes to your **GitHub account**.  
-2. Implement both the **frontend** and **backend** as described below.  
+1. Navigate to `appsettings.json` file in the `backend/Src/TodoList.WebApi/` directory
+2. Replace the connection string with the credentials provided separately
 
-## Frontend  
+Note: Database credentials will be sent separately via mail.
 
-- Start from provided **empty React app**, created using [React’s official guide](https://react.dev/learn/creating-a-react-app).  
-- Design and implement a **TODO list UI** that allows users to:  
-  - **Add** new items  
-  - **Rename** existing items  
-  - **Remove** items  
-- The frontend **must communicate with the backend API** for all CRUD operations.  
+## Running the Application
 
-## Backend  
+### Option 1: Using Docker (Recommended)
 
-- Start from provided **empty C# Web API project** along with an **empty xUnit test project**.  
-- Use any **persistence method** of your choice:  
-  - **Relational DB**, **document DB**, **filesystem**, or **in-memory storage**.  
-- Implement **CRUD endpoints** for managing TODO items.  
-- Write **integration tests** in xUnit that call the real API endpoints to validate that all CRUD operations work correctly.  
+The easiest way to run the entire application stack is with Docker Compose:
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# To view logs
+docker-compose logs -f
+
+# To stop all services
+docker-compose down
+```
+
+This will start:
+- MongoDB database at http://localhost:27017
+- C# Backend API at http://localhost:5020
+- React Frontend at http://localhost:3000
+
+### Option 2: Running Locally
+
+#### Database Setup
+
+1. Install MongoDB locally or use the Connection String provided via mail.
+2. Update `appsettings.json` file in `backend/Src/TodoList.WebApi/` with your MongoDB connection:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "MongoDbSettings": {
+    "ConnectionString": "mongodb://localhost:27017", // Update connection string
+    "DatabaseName": "TodoListDb",
+    "CollectionName": "Todos"
+  }
+}
+```
+#### Backend (C# Web API)
+```bash
+cd backend
+dotnet restore
+dotnet build
+cd Src/TodoList.WebApi
+dotnet run
+```
+The API will be available at https://localhost:7213 and http://localhost:5020.
+#### Frontend (Next.js)
+```bash
+cd frontend/todo-list
+npm install
+npm run dev
+```
+The frontend will be available at http://localhost:3000.
+## Running Tests
+```bash
+cd backend/Tests/TodoList.IntegrationTests
+dotnet test
+```
 
