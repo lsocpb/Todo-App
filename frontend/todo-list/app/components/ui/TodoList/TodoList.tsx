@@ -7,6 +7,7 @@ import TodoService, {
   CreateTodoDto,
   UpdateTodoDto,
 } from "../../../services/todoService";
+import { Icons } from "../../../assets/Icons";
 
 /**
  * Komponent listy zadań Todo, umożliwiający wyświetlanie, dodawanie, edytowanie oraz usuwanie zadań.
@@ -33,7 +34,7 @@ export default function TodoList() {
     try {
       const data = await TodoService.getAllTodos();
       setTodos(data);
-    } catch (err : any) {
+    } catch (err: any) {
       setError(err.response.data.message);
     } finally {
       setIsLoading(false);
@@ -52,7 +53,7 @@ export default function TodoList() {
       setTodos((prevTodos) => [...prevTodos, createdTodo]);
       setShowAddForm(false);
       return Promise.resolve();
-    } catch (err : any) {
+    } catch (err: any) {
       setError(err.response.data.message);
       return Promise.reject(err);
     }
@@ -75,7 +76,7 @@ export default function TodoList() {
             : todo
         )
       );
-    } catch (err : any) {
+    } catch (err: any) {
       setError(err.response.data.message);
     }
   };
@@ -90,7 +91,7 @@ export default function TodoList() {
     try {
       await TodoService.deleteTodo(id);
       setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-    } catch (err : any) {
+    } catch (err: any) {
       setError(err.response.data.message);
     }
   };
@@ -114,20 +115,7 @@ export default function TodoList() {
             <span>Cancel</span>
           ) : (
             <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
+              <Icons.Plus />
               <span>Add Todo</span>
             </>
           )}
