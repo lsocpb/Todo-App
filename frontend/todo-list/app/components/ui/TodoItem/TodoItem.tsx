@@ -105,6 +105,7 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
                     ? "bg-green-500 border-green-600 text-white"
                     : "border-gray-300 hover:border-gray-400"
                 }`}
+                aria-label="Toggle complete"
               >
                 {todo.isCompleted && <Icons.Check />}
               </button>
@@ -133,6 +134,7 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
                 onClick={() => setIsEditing(true)}
                 className="text-blue-500 hover:text-blue-700 p-1"
                 disabled={isLoading}
+                aria-label="Edit todo"
               >
                 <Icons.Edit />
               </button>
@@ -156,6 +158,7 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
                   onClick={cancelDelete}
                   className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded text-gray-800 transition-colors"
                   disabled={isLoading}
+                  aria-label="Cancel delete"
                 >
                   Cancel
                 </button>
@@ -163,6 +166,7 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
                   onClick={handleDelete}
                   className="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 rounded text-white transition-colors flex items-center"
                   disabled={isLoading}
+                  aria-label="Delete todo"
                 >
                   {isLoading ? (
                     <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></span>
