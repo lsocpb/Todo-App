@@ -68,16 +68,14 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
    * @throws {Error} Błąd podczas usuwania zadania.
    */
   const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this todo?")) {
-      setIsLoading(true);
-      try {
-        await onDelete(todo.id);
-        setShowDeleteConfirmation(false);
-      } catch (error: any) {
-        setError(error.response.data.message);
-      } finally {
-        setIsLoading(false);
-      }
+    setIsLoading(true);
+    try {
+      await onDelete(todo.id);
+      setShowDeleteConfirmation(false);
+    } catch (error: any) {
+      setError(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,6 +140,7 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
                 onClick={promptDelete}
                 className="text-red-500 hover:text-red-700 p-1"
                 disabled={isLoading || showDeleteConfirmation}
+                aria-label="Delete todo"
               >
                 <Icons.Delete />
               </button>

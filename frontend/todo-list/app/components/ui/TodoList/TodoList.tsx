@@ -109,16 +109,11 @@ export default function TodoList() {
         <h2 className="text-2xl font-bold text-gray-700">My Todo List</h2>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition flex items-center"
+          aria-label={showAddForm ? "Cancel adding todo" : "Add new todo"}
+          title={showAddForm ? "Cancel" : "Add Todo"}
+          className="w-12 h-12 rounded-full bg-blue-500 text-white shadow-md hover:bg-blue-600 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
         >
-          {showAddForm ? (
-            <span>Cancel</span>
-          ) : (
-            <>
-              <Icons.Plus />
-              <span>Add Todo</span>
-            </>
-          )}
+          {showAddForm ? <Icons.Close /> : <Icons.Plus />}
         </button>
       </div>
 
