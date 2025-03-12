@@ -33,9 +33,8 @@ export default function TodoList() {
     try {
       const data = await TodoService.getAllTodos();
       setTodos(data);
-    } catch (err) {
-      setError("Failed to load todos");
-      console.error(err);
+    } catch (err : any) {
+      setError(err.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -53,9 +52,8 @@ export default function TodoList() {
       setTodos((prevTodos) => [...prevTodos, createdTodo]);
       setShowAddForm(false);
       return Promise.resolve();
-    } catch (err) {
-      setError("Failed to create todo");
-      console.error(err);
+    } catch (err : any) {
+      setError(err.response.data.message);
       return Promise.reject(err);
     }
   };
@@ -77,9 +75,8 @@ export default function TodoList() {
             : todo
         )
       );
-    } catch (err) {
-      setError("Failed to update todo");
-      console.error(err);
+    } catch (err : any) {
+      setError(err.response.data.message);
     }
   };
 
@@ -93,9 +90,8 @@ export default function TodoList() {
     try {
       await TodoService.deleteTodo(id);
       setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-    } catch (err) {
-      setError("Failed to delete todo");
-      console.error(err);
+    } catch (err : any) {
+      setError(err.response.data.message);
     }
   };
 

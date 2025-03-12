@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TodoList.WebApi.Constants;
 using TodoList.WebApi.DTOs;
 using TodoList.WebApi.Interfaces;
 using TodoList.WebApi.Models;
@@ -31,8 +32,15 @@ namespace TodoList.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDo>>> GetAll()
         {
-            var todos = await _todoService.GetAllTodosAsync();
-            return Ok(todos);
+            try
+            {
+                var todos = await _todoService.GetAllTodosAsync();
+                return Ok(todos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         /// <summary>
@@ -43,14 +51,19 @@ namespace TodoList.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ToDo>> GetById(string id)
         {
-            var todo = await _todoService.GetTodoByIdAsync(id);
-
-            if (todo == null)
+            try
             {
-                return NotFound();
+                var todo = await _todoService.GetTodoByIdAsync(id);
+                if (todo == null)
+                {
+                    return NotFound(new { message = ErrorMessages.TODO_NOT_FOUND });
+                }
+                return Ok(todo);
             }
-
-            return Ok(todo);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         /// <summary>
@@ -63,15 +76,21 @@ namespace TodoList.WebApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { message = "Invalid model state" });
             }
 
-            var createdTodo = await _todoService.CreateTodoAsync(createTodoDto);
-
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = createdTodo.Id },
-                createdTodo);
+            try
+            {
+                var createdTodo = await _todoService.CreateTodoAsync(createTodoDto);
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = createdTodo.Id },
+                    createdTodo);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         /// <summary>
@@ -84,17 +103,22 @@ namespace TodoList.WebApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { message = "Invalid model state" });
             }
 
-            var result = await _todoService.UpdateTodoAsync(id, updateTodoDto);
-
-            if (!result)
+            try
             {
-                return NotFound();
+                var result = await _todoService.UpdateTodoAsync(id, updateTodoDto);
+                if (!result)
+                {
+                    return NotFound(new { message = ErrorMessages.TODO_NOT_FOUND });
+                }
+                return NoContent();
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         /// <summary>
@@ -104,14 +128,19 @@ namespace TodoList.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await _todoService.DeleteTodoAsync(id);
-
-            if (!result)
+            try
             {
-                return NotFound();
+                var result = await _todoService.DeleteTodoAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = ErrorMessages.TODO_NOT_FOUND });
+                }
+                return NoContent();
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }

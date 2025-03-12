@@ -2,9 +2,10 @@
 using TodoList.WebApi.Interfaces;
 using TodoList.WebApi.Models;
 using TodoList.WebApi.Services.Interfaces;
+using TodoList.WebApi.Constants;
 
 namespace TodoList.WebApi.Services
-{   
+{
     /// <summary>
     /// Serwis do obsługi operacji na zadaniach
     /// </summary>
@@ -26,7 +27,14 @@ namespace TodoList.WebApi.Services
         /// <returns>Lista zadań</returns>
         public async Task<IEnumerable<ToDo>> GetAllTodosAsync()
         {
-            return await _todoRepository.GetAllAsync();
+            try
+            {
+                return await _todoRepository.GetAllAsync();
+            }
+            catch (Exception)
+            {
+                throw new Exception(ErrorMessages.ERROR_FETCHING_TODOS);
+            }
         }
 
         /// <summary>
@@ -35,7 +43,14 @@ namespace TodoList.WebApi.Services
         /// <param name="id">Identyfikator zadania</param>
         public async Task<ToDo> GetTodoByIdAsync(string id)
         {
-            return await _todoRepository.GetByIdAsync(id);
+            try
+            {
+                return await _todoRepository.GetByIdAsync(id);
+            }
+            catch (Exception)
+            {
+                throw new Exception(ErrorMessages.ERROR_FETCHING_TODO_BY_ID);
+            }
         }
 
         /// <summary>
@@ -45,16 +60,23 @@ namespace TodoList.WebApi.Services
         /// <returns>Nowe zadanie</returns>
         public async Task<ToDo> CreateTodoAsync(CreateTodoDto createTodoDto)
         {
-            var todo = new ToDo
+            try
             {
-                Title = createTodoDto.Title,
-                Description = createTodoDto.Description,
-                IsCompleted = false,
-                CreatedAt = DateTime.UtcNow,
-                CompletedAt = null
-            };
+                var todo = new ToDo
+                {
+                    Title = createTodoDto.Title,
+                    Description = createTodoDto.Description,
+                    IsCompleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CompletedAt = null
+                };
 
-            return await _todoRepository.CreateAsync(todo);
+                return await _todoRepository.CreateAsync(todo);
+            }
+            catch (Exception)
+            {
+                throw new Exception(ErrorMessages.ERROR_CREATING_TODO);
+            }
         }
 
         /// <summary>
@@ -65,38 +87,45 @@ namespace TodoList.WebApi.Services
         /// <returns>True jeśli aktualizacja się powiodła, w przeciwnym wypadku false</returns>
         public async Task<bool> UpdateTodoAsync(string id, UpdateTodoDto updateTodoDto)
         {
-            var existingTodo = await _todoRepository.GetByIdAsync(id);
-
-            if (existingTodo == null)
+            try
             {
-                return false;
-            }
+                var existingTodo = await _todoRepository.GetByIdAsync(id);
 
-            if (updateTodoDto.Title != null)
-            {
-                existingTodo.Title = updateTodoDto.Title;
-            }
-
-            if (updateTodoDto.Description != null)
-            {
-                existingTodo.Description = updateTodoDto.Description;
-            }
-
-            if (updateTodoDto.IsCompleted.HasValue)
-            {
-                if (!existingTodo.IsCompleted && updateTodoDto.IsCompleted.Value)
+                if (existingTodo == null)
                 {
-                    existingTodo.CompletedAt = DateTime.UtcNow;
-                }
-                else if (existingTodo.IsCompleted && !updateTodoDto.IsCompleted.Value)
-                {
-                    existingTodo.CompletedAt = null;
+                    return false;
                 }
 
-                existingTodo.IsCompleted = updateTodoDto.IsCompleted.Value;
-            }
+                if (updateTodoDto.Title != null)
+                {
+                    existingTodo.Title = updateTodoDto.Title;
+                }
 
-            return await _todoRepository.UpdateAsync(id, existingTodo);
+                if (updateTodoDto.Description != null)
+                {
+                    existingTodo.Description = updateTodoDto.Description;
+                }
+
+                if (updateTodoDto.IsCompleted.HasValue)
+                {
+                    if (!existingTodo.IsCompleted && updateTodoDto.IsCompleted.Value)
+                    {
+                        existingTodo.CompletedAt = DateTime.UtcNow;
+                    }
+                    else if (existingTodo.IsCompleted && !updateTodoDto.IsCompleted.Value)
+                    {
+                        existingTodo.CompletedAt = null;
+                    }
+
+                    existingTodo.IsCompleted = updateTodoDto.IsCompleted.Value;
+                }
+
+                return await _todoRepository.UpdateAsync(id, existingTodo);
+            }
+            catch (Exception)
+            {
+                throw new Exception(ErrorMessages.ERROR_UPDATING_TODO);
+            }
         }
 
         /// <summary>
@@ -106,7 +135,14 @@ namespace TodoList.WebApi.Services
         /// <returns>True jeśli usunięcie się powiodło, w przeciwnym wypadku false</returns>
         public async Task<bool> DeleteTodoAsync(string id)
         {
-            return await _todoRepository.DeleteAsync(id);
+            try
+            {
+                return await _todoRepository.DeleteAsync(id);
+            }
+            catch (Exception)
+            {
+                throw new Exception(ErrorMessages.ERROR_DELETING_TODO);
+            }
         }
     }
 }

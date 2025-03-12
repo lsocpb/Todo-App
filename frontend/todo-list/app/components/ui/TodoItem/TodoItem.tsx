@@ -28,6 +28,7 @@ interface TodoItemProps {
 export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Obsługuje zmianę statusu zakończenia zadania.
@@ -38,8 +39,8 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
     setIsLoading(true);
     try {
       await onUpdate(todo.id, { isCompleted: !todo.isCompleted });
-    } catch (error) {
-      console.error("Error toggling complete status:", error);
+    } catch (error : any) {
+      setError(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -55,8 +56,8 @@ export default function TodoItem({ todo, onUpdate, onDelete }: TodoItemProps) {
       setIsLoading(true);
       try {
         await onDelete(todo.id);
-      } catch (error) {
-        console.error("Error deleting todo:", error);
+      } catch (error : any) {
+        setError(error.response.data.message);
       } finally {
         setIsLoading(false);
       }

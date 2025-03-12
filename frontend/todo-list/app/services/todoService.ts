@@ -20,7 +20,7 @@ export interface UpdateTodoDto {
   isCompleted?: boolean;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5020";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -39,14 +39,10 @@ export class TodoService {
    * @throws {Error} Błąd podczas pobierania zadań.
    */
   static async getAllTodos(): Promise<Todo[]> {
-    try {
-      const response = await api.get<Todo[]>("/api/Todo");
-      return response.data;
-    } catch (error) {
-      console.error("Failed to fetch todos:", error);
-      throw error;
-    }
+    const response = await api.get<Todo[]>("/api/Todo");
+    return response.data;
   }
+
   /**
    * Pobiera zadanie Todo na podstawie identyfikatora.
    * @param {string} id - Identyfikator zadania.
@@ -54,14 +50,10 @@ export class TodoService {
    * @throws {Error} Błąd podczas pobierania zadania.
    */
   static async getTodoById(id: string): Promise<Todo> {
-    try {
-      const response = await api.get<Todo>(`/api/Todo/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Failed to fetch todo ${id}:`, error);
-      throw error;
-    }
+    const response = await api.get<Todo>(`/api/Todo/${id}`);
+    return response.data;
   }
+
   /**
    * Tworzy nowe zadanie Todo.
    * @param {CreateTodoDto} createTodoDto - Dane do utworzenia zadania.
@@ -69,49 +61,34 @@ export class TodoService {
    * @throws {Error} Błąd podczas tworzenia zadania.
    */
   static async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
-    try {
-      const response = await api.post<Todo>("/api/Todo", createTodoDto);
-      return response.data;
-    } catch (error) {
-      console.error("Failed to create todo:", error);
-      throw error;
-    }
+    const response = await api.post<Todo>("/api/Todo", createTodoDto);
+    return response.data;
   }
 
   /**
    * Aktualizuje istniejące zadanie Todo.
    * @param {string} id - Identyfikator zadania do aktualizacji.
    * @param {UpdateTodoDto} updateTodoDto - Dane do aktualizacji zadania.
-   * @returns {Promise<boolean>} True, jeśli aktualizacja się powiodła.
+   * @returns {Promise<any>} Odpowiedź z serwera po aktualizacji zadania.
    * @throws {Error} Błąd podczas aktualizacji zadania.
    */
   static async updateTodo(
     id: string,
     updateTodoDto: UpdateTodoDto
-  ): Promise<boolean> {
-    try {
-      await api.put(`/api/Todo/${id}`, updateTodoDto);
-      return true;
-    } catch (error) {
-      console.error(`Failed to update todo ${id}:`, error);
-      throw error;
-    }
+  ): Promise<any> {
+    const response = await api.put(`/api/Todo/${id}`, updateTodoDto);
+    return response.data;
   }
 
   /**
    * Usuwa zadanie Todo na podstawie identyfikatora.
    * @param {string} id - Identyfikator zadania do usunięcia.
-   * @returns {Promise<boolean>} True, jeśli usunięcie się powiodło.
+   * @returns {Promise<any>} Odpowiedź z serwera po usunięciu zadania.
    * @throws {Error} Błąd podczas usuwania zadania.
    */
-  static async deleteTodo(id: string): Promise<boolean> {
-    try {
-      await api.delete(`/api/Todo/${id}`);
-      return true;
-    } catch (error) {
-      console.error(`Failed to delete todo ${id}:`, error);
-      throw error;
-    }
+  static async deleteTodo(id: string): Promise<any> {
+    const response = await api.delete(`/api/Todo/${id}`);
+    return response.data;
   }
 }
 

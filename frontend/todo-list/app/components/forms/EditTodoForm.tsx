@@ -32,6 +32,7 @@ export default function EditTodoForm({
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description || "");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Obsługuje zdarzenie wysłania formularza.
@@ -47,11 +48,11 @@ export default function EditTodoForm({
     try {
       await onUpdate(todo.id, {
         title: title.trim(),
-        description: description.trim() || undefined,
+        description: description.trim(),
       });
       onCancel();
     } catch (error) {
-      console.error("Error updating todo:", error);
+      setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -59,6 +60,11 @@ export default function EditTodoForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+          {error}
+        </div>
+      )}
       <input
         type="text"
         value={title}

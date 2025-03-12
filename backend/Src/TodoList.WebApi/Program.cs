@@ -34,10 +34,15 @@ namespace TodoList.WebApi
                 options.AddPolicy("AllowReactApp", policyBuilder =>
                 {
                     policyBuilder.WithOrigins(
-                            "http://localhost:3000",
-                            "http://frontend:3000")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        "http://localhost:3000",  // Adres React app
+                        "https://localhost:3000", // Wersja HTTPS
+                        "http://frontend:3000",   // Docker nazwa serwisu
+                        "http://localhost:5020",  // Alternatywny adres API
+                        "https://localhost:7213"  // Przekierowany adres HTTPS
+                    )
+                    .SetIsOriginAllowedToAllowWildcardSubdomains()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
                 });
             });
 
@@ -50,7 +55,7 @@ namespace TodoList.WebApi
             }
 
             app.UseCors("AllowReactApp");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
 

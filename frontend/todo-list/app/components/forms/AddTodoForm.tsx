@@ -24,6 +24,7 @@ export default function AddTodoForm({ onAddTodo, onCancel }: AddTodoFormProps) {
     description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Obsługuje zdarzenie wysłania formularza.
@@ -40,8 +41,8 @@ export default function AddTodoForm({ onAddTodo, onCancel }: AddTodoFormProps) {
         title: newTodo.title.trim(),
         description: newTodo.description?.trim() || undefined,
       });
-    } catch (error) {
-      console.error("Error in AddTodoForm:", error);
+    } catch (error : any) {
+      setError(error.response.data.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -49,6 +50,11 @@ export default function AddTodoForm({ onAddTodo, onCancel }: AddTodoFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="mb-6 bg-gray-50 p-4 rounded-md">
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+          {error}
+        </div>
+      )}
       <div className="mb-3">
         <label
           htmlFor="title"

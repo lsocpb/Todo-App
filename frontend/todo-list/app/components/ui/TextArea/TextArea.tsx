@@ -41,6 +41,11 @@ export default function TextArea({
   disabled = false,
   ...rest
 }: TextAreaProps) {
+  /**
+   * Obsługuje zmianę wartości pola tekstowego.
+   * @param {ChangeEvent<HTMLTextAreaElement>} e - Obiekt zdarzenia zmiany wartości pola tekstowego.
+   * @returns {void}
+   */
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
   };
