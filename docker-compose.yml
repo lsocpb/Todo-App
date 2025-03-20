@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongodb:
@@ -22,6 +22,20 @@ services:
       - MongoDbSettings__ConnectionString=mongodb://mongodb:27017
       - MongoDbSettings__DatabaseName=TodoListDb
       - MongoDbSettings__CollectionName=Todos
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  tests:
+    build:
+      context: ./backend
+      dockerfile: ./Tests/Dockerfile.tests
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MongoDbSettings__ConnectionString=mongodb://mongodb:27017
+      - MongoDbSettings__DatabaseName=TodoListTestDb
+      - MongoDbSettings__CollectionName=TodosTest
     depends_on:
       - mongodb
     networks:
